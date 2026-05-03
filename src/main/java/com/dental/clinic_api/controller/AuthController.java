@@ -50,23 +50,39 @@ public class AuthController {
 
     // FORGOT PASSWORD (SIMPLE RESET)
     @PostMapping("/forgot-password")
-    public String forgotPassword(@RequestBody LoginRequest request) {
+public String forgotPassword(@RequestBody LoginRequest request) {
 
-        String email = request.getEmail().trim().toLowerCase();
+    String email = request.getEmail().trim().toLowerCase();
 
-        User user = userRepository.findByEmail(email);
+    User user = userRepository.findByEmail(email);
 
-        if(user == null){
-            return "User not found";
-        }
-
-        // RESET PASSWORD (TEMP DEFAULT)
-        user.setPassword("123456");
-        userRepository.save(user);
-
-        return "Password reset successful. New password: 123456";
+    if(user == null){
+        return "User not found";
     }
 
+    user.setPassword("123456");
+    userRepository.save(user);
+
+    return "Password reset successful";
+}
+
+@PostMapping("/reset-password")
+public String resetPassword(@RequestBody LoginRequest request) {
+
+    String email = request.getEmail().trim().toLowerCase();
+    String newPassword = request.getPassword();
+
+    User user = userRepository.findByEmail(email);
+
+    if(user == null){
+        return "User not found";
+    }
+
+    user.setPassword(newPassword);
+    userRepository.save(user);
+
+    return "Password updated successfully";
+}
     @GetMapping("/ping")
     public String ping(){
         return "WORKING";
