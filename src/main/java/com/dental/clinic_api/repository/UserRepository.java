@@ -4,6 +4,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.dental.clinic_api.model.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
-
-    User findByEmailIgnoreCase(String email);
+    User findByEmail(String email);
 }
