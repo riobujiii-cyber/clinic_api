@@ -34,6 +34,7 @@ public class BookingController {
     public Booking getById(@PathVariable Long id) {
         return bookingRepository.findById(id).orElse(null);
     }
+    
 
     // UPDATE status
     @PutMapping("/{id}/status")

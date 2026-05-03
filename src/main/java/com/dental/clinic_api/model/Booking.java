@@ -1,8 +1,8 @@
 package com.dental.clinic_api.model;
 
 import jakarta.persistence.*;
-import java.time.LocalDate;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "bookings")
@@ -17,10 +17,10 @@ public class Booking {
     private String phone;
     private String service;
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
     @Column(name = "appointment_date")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate appointmentDate;
-
+    
     @Column(columnDefinition = "TEXT")
     private String message;
 
@@ -43,8 +43,8 @@ public class Booking {
     public String getService() { return service; }
     public void setService(String service) { this.service = service; }
 
-    public LocalDate getAppointmentDate() { return appointmentDate; }
-    public void setAppointmentDate(LocalDate appointmentDate) { this.appointmentDate = appointmentDate; }
+    public LocalDate getAppointmentDate() { return appointmentDate;}
+    public void setAppointmentDate(LocalDate appointmentDate) {this.appointmentDate = appointmentDate;}
 
     public String getMessage() { return message; }
     public void setMessage(String message) { this.message = message; }
