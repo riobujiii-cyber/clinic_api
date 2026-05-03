@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.dental.clinic_api.model.User;
 import com.dental.clinic_api.repository.UserRepository;
+import com.dental.clinic_api.dto.LoginRequest;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -14,18 +15,35 @@ public class AuthController {
     @Autowired
     private UserRepository userRepository;
 
+    // SIGNUP
     @PostMapping("/signup")
-public String signup(@RequestBody User user) {
+    public String signup(@RequestBody User user) {
 
-    try {
+        if(userRepository.findByEmail(user.getEmail()) != null){
+            return "Email already exists!";
+        }
+
         userRepository.save(user);
         return "User registered!";
-    } catch (Exception e) {
-        e.printStackTrace();
-        return "ERROR: " + e.getMessage();
     }
-}
-    
+
+    // LOGIN
+    @PostMapping("/login")
+    public String login(@RequestBody LoginRequest request) {
+
+        User user = userRepository.findByEmail(request.getEmail());
+
+        if(user == null){
+            return "User not found";
+        }
+
+        if(!user.getPassword().equals(request.getPassword())){
+            return "Wrong password";
+        }
+
+        return "Login successful";
+    }
+
     @GetMapping("/ping")
     public String ping(){
         return "WORKING";
