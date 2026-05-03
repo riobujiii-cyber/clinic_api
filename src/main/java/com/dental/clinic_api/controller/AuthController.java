@@ -19,7 +19,13 @@ public class AuthController {
     @PostMapping("/signup")
     public String signup(@RequestBody User user) {
 
-        if(userRepository.findByEmail(user.getEmail()) != null){
+        // 👇 DEBUG SIGNUP EMAIL
+        System.out.println("SIGNUP EMAIL = " + user.getEmail());
+
+        // CLEAN EMAIL BEFORE SAVING
+        user.setEmail(user.getEmail().trim().toLowerCase());
+
+        if(userRepository.findByEmailIgnoreCase(user.getEmail()) != null){
             return "Email already exists!";
         }
 
@@ -29,24 +35,21 @@ public class AuthController {
 
     // LOGIN
     @PostMapping("/login")
-public String login(@RequestBody LoginRequest request) {
+    public String login(@RequestBody LoginRequest request) {
 
-    String email = request.getEmail().trim().toLowerCase();
+        String email = request.getEmail().trim().toLowerCase();
 
-    User user = userRepository.findByEmail(email);
-    
-    user.setEmail(user.getEmail().trim().toLowerCase());
+        // 👇 DEBUG LOGIN EMAIL
+        System.out.println("LOGIN EMAIL = " + email);
 
-    if(user == null){
-        return "User not found";
+        User user = userRepository.findByEmailIgnoreCase(email);
+
+        if(user == null){
+            return "User not found";
+        }
+
+        return "Login successful";
     }
-
-    if(!user.getPassword().equals(request.getPassword())){
-        return "Wrong password";
-    }
-
-    return "Login successful";
-}
 
     @GetMapping("/ping")
     public String ping(){
