@@ -29,20 +29,24 @@ public class AuthController {
 
     // LOGIN
     @PostMapping("/login")
-    public String login(@RequestBody LoginRequest request) {
+public String login(@RequestBody LoginRequest request) {
 
-        User user = userRepository.findByEmail(request.getEmail());
+    String email = request.getEmail().trim().toLowerCase();
 
-        if(user == null){
-            return "User not found";
-        }
+    User user = userRepository.findByEmail(email);
+    
+    user.setEmail(user.getEmail().trim().toLowerCase());
 
-        if(!user.getPassword().equals(request.getPassword())){
-            return "Wrong password";
-        }
-
-        return "Login successful";
+    if(user == null){
+        return "User not found";
     }
+
+    if(!user.getPassword().equals(request.getPassword())){
+        return "Wrong password";
+    }
+
+    return "Login successful";
+}
 
     @GetMapping("/ping")
     public String ping(){
