@@ -17,36 +17,34 @@ public class AuthController {
 
     // SIGNUP
     @PostMapping("/signup")
-    public String signup(@RequestBody User user) {
+public String signup(@RequestBody User user) {
 
-        user.setEmail(user.getEmail().trim().toLowerCase());
+    user.setEmail(user.getEmail().trim().toLowerCase());
 
-        if(userRepository.findByEmail(user.getEmail()) != null){
-            return "Email already exists!";
-        }
-
-        userRepository.save(user);
-        return "User registered!";
+    if(userRepository.findByEmail(user.getEmail()) != null){
+        return "Email already exists!";
     }
+
+    user.setRole("USER"); // 👈 DEFAULT
+
+    userRepository.save(user);
+    return "User registered!";
+}
 
     // LOGIN
     @PostMapping("/login")
-    public String login(@RequestBody LoginRequest request) {
+public User login(@RequestBody LoginRequest request) {
 
-        String email = request.getEmail().trim().toLowerCase();
+    String email = request.getEmail().trim().toLowerCase();
 
-        User user = userRepository.findByEmail(email);
+    User user = userRepository.findByEmail(email);
 
-        if(user == null){
-            return "User not found";
-        }
-
-        if(!user.getPassword().equals(request.getPassword())){
-            return "Wrong password";
-        }
-
-        return "Login successful";
+    if(user == null){
+        throw new RuntimeException("User not found");
     }
+
+    return user; // returns JSON (includes role)
+}
 
     // FORGOT PASSWORD (SIMPLE RESET)
     @PostMapping("/forgot-password")
