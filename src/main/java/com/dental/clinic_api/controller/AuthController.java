@@ -15,15 +15,16 @@ public class AuthController {
     private UserRepository userRepository;
 
     @PostMapping("/signup")
-    public String signup(@RequestBody User user) {
+public String signup(@RequestBody User user) {
 
-        if(userRepository.findByEmail(user.getEmail()) != null){
-            return "Email already exists!";
-        }
-
+    try {
         userRepository.save(user);
         return "User registered!";
+    } catch (Exception e) {
+        e.printStackTrace();
+        return "ERROR: " + e.getMessage();
     }
+}
     
     @GetMapping("/ping")
     public String ping(){
