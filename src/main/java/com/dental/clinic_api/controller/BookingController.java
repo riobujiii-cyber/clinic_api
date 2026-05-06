@@ -52,4 +52,10 @@ public class BookingController {
     public void delete(@PathVariable Long id) {
         bookingRepository.deleteById(id);
     }
+    
+    @GetMapping("/user/{userId}")
+public List<Booking> getUserBookings(@PathVariable Long userId){
+    return bookingRepository.findByUserId(userId);
 }
+}
+

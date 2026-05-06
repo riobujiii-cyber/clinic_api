@@ -7,6 +7,10 @@ import com.dental.clinic_api.model.User;
 import com.dental.clinic_api.repository.UserRepository;
 import com.dental.clinic_api.dto.LoginRequest;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/auth")
 @CrossOrigin(origins = "*")
@@ -17,33 +21,37 @@ public class AuthController {
 
     // SIGNUP
     @PostMapping("/signup")
-public String signup(@RequestBody User user) {
+public ResponseEntity<?> signup(@RequestBody User user) {
 
     user.setEmail(user.getEmail().trim().toLowerCase());
 
     if(userRepository.findByEmail(user.getEmail()) != null){
-        return "Email already exists!";
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(Map.of("message", "Email already exists!"));
     }
 
-    user.setRole("USER"); // 👈 DEFAULT
-
+    user.setRole("USER");
     userRepository.save(user);
-    return "User registered!";
+
+    return ResponseEntity.ok(Map.of("message", "User registered!"));
 }
 
     // LOGIN
     @PostMapping("/login")
-public User login(@RequestBody LoginRequest request) {
+public ResponseEntity<?> login(@RequestBody LoginRequest request) {
 
     String email = request.getEmail().trim().toLowerCase();
 
     User user = userRepository.findByEmail(email);
 
-    if(user == null){
-        throw new RuntimeException("User not found");
+    if(user == null || !user.getPassword().equals(request.getPassword())){
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(Map.of("message", "Invalid email or password"));
     }
 
-    return user; // returns JSON (includes role)
+    return ResponseEntity.ok(user);
 }
 
     // FORGOT PASSWORD (SIMPLE RESET)

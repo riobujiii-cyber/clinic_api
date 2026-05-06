@@ -25,6 +25,8 @@ public class Booking {
     private String message;
 
     private String status = "pending";
+    
+    private Long userId;
 
     // GETTERS AND SETTERS
 
@@ -51,4 +53,12 @@ public class Booking {
 
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
+    
+    public Long getUserId() {
+    return userId;
+}
+
+public void setUserId(Long userId) {
+    this.userId = userId;
+}
 }
